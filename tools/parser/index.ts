@@ -117,7 +117,7 @@ const customRecoParser: PropSelector = (name, param, utils) => {
   // 节点引用
   if (name === 'autoEcoFarmFindNearestRecognitionResult' || name === 'EssenceFilterAfterBattleNthRecognition') {
     tryAddTaskFields(param, utils, result, ['recognitionNodeName', 'RecognitionNodeName'])
-  } else if (name === 'ExpendableRecognition') {
+  } else if (name === 'ExpendableRecognition' || name === 'ExpendableBoxRecognition') {
     tryAddTaskFields(param, utils, result, ['candidate', 'visited_node'])
   } else if (name === 'ExpressionRecognition') {
     tryAddTaskFields(param, utils, result, ['box_node'])

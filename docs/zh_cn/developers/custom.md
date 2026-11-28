@@ -554,6 +554,15 @@ Pipeline 布局与 `ListCompleteRecognition` 相同：将本识别放在滚动�
 - key OCR 必须是**命名节点引用**（`And.box_index` 不能指向内联 OCR）。
 - `key_regex` 只执行调用方声明的截取规则；通用模块不内置具体游戏文案。
 
+### ExpendableBoxRecognition
+
+`ExpendableBoxRecognition` 位于 `agent/go-service/common/expendable`，用于候选为纯图标或多项文案相同（无法按文本拉黑）时的按坐标框消费性点选。
+
+- `candidate: string`：必填。候选识别节点名（支持内置识别，或 `And` 经 `box_index` 指向目标子识别）。
+- `visited_node: string`：可选。读写 `attach.visited_boxes` 的节点，省略则用当前 Custom 节点。
+
+每次执行 `candidate` 后按原生排序遍历 `Filtered` 候选框，跳过已落在 `visited_boxes` 内的位置，返回首个未访问框并追加记录；全部访问完毕后返回未命中。扫描期间未移除目标的位置应保持稳定，重排或滚动后需重置 `visited_boxes`。
+
 ### ScheduleRecognition
 
 `ScheduleRecognition` 实现位于 `agent/go-service/common/schedule`，用于按星期几判断当前任务是否应继续执行（按游戏日计算，本地时间每天 04:00 前算作前一天）。它只返回识别是否命中，不在 Go 中直接运行子任务；后续流程应通过 Pipeline 的 `next` 组织。
@@ -661,6 +670,7 @@ Pipeline 布局与 `ListCompleteRecognition` 相同：将本识别放在滚动�
 | 获取滚动条滑块的位置和长度 | `ScrollbarRecognition` |
 | 通过滚动条位置判断列表是否已到顶或到底 | `ScrollbarCompleteRecognition` |
 | 消费性点选（visited 排除） | `ExpendableRecognition` |
+| 按坐标框消费性点选（visited_boxes 排除） | `ExpendableBoxRecognition` |
 | 按星期几门控后续节点 | `ScheduleRecognition` |
 | 在指定位置 Alt + 点击 | `AutoAltClickAction` |
 | 在指定位置 Ctrl + 点击 | `AutoCtrlClickAction` |

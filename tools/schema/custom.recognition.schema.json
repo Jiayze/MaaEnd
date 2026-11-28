@@ -22,6 +22,7 @@
                 "EssenceGridPendingRecognition",
                 "EssenceGridDetailRecognition",
                 "EveryNthHit",
+                "ExpendableBoxRecognition",
                 "ExpendableRecognition",
                 "ExpressionRecognition",
                 "IconRecognition",
@@ -158,6 +159,38 @@
                                 "type": "integer",
                                 "minimum": 1,
                                 "maximum": 2147483647
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "type": "object",
+                "required": ["custom_recognition"],
+                "properties": {"custom_recognition": {"const": "ExpendableBoxRecognition"}}
+            },
+            "then": {
+                "type": "object",
+                "required": ["custom_recognition_param"],
+                "properties": {
+                    "custom_recognition_param": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": ["candidate"],
+                        "properties": {
+                            "candidate": {
+                                "type": "string",
+                                "minLength": 1,
+                                "title": "Candidate",
+                                "description": "Candidate recognition node name (or And whose box_index resolves to the target recognition). Filtered result boxes not yet in attach.visited_boxes are consumed in order."
+                            },
+                            "visited_node": {
+                                "type": "string",
+                                "minLength": 1,
+                                "title": "Visited Node",
+                                "description": "Optional. Node whose attach.visited_boxes is used as the shared blacklist store. Defaults to the current Custom recognition node."
                             }
                         }
                     }

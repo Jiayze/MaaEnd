@@ -554,6 +554,15 @@ Notes:
 - Key OCR leaves must be **named node refs** (`And.box_index` must not point at an inline OCR object).
 - `key_regex` only runs caller-declared truncation; the shared component never embeds game-specific copy rules.
 
+### ExpendableBoxRecognition
+
+`ExpendableBoxRecognition` lives in `agent/go-service/common/expendable` and implements one-shot consumption by bounding box when candidates are icons or share identical text.
+
+- `candidate: string`: Required. Candidate recognition node name (built-in recognition, or an `And` whose `box_index` resolves to the target sub-recognition).
+- `visited_node: string`: Optional. Node storing `attach.visited_boxes`; defaults to the current Custom recognition node.
+
+Each evaluation runs `candidate`, iterates `Filtered` boxes in native `order_by` order, skips boxes already matching `visited_boxes`, and appends + returns the first unvisited box (returning no match once all have been visited). Unremoved targets must stay at stable positions during a pass; reset `visited_boxes` after sorting or scrolling.
+
 ### ScheduleRecognition
 
 The `ScheduleRecognition` implementation is located in `agent/go-service/common/schedule`. It is used to determine whether the current task should continue executing based on the day of the week (game days start at 04:00 local time). It only returns whether recognition matches; it does not directly run subtasks in Go; subsequent flows should be organized via the Pipeline's `next`.
@@ -661,6 +670,7 @@ When writing a Pipeline, the built-in `TemplateMatch` / `OCR` / `Click` / `Swipe
 | Get the scrollbar thumb position and length | `ScrollbarRecognition` |
 | Detect a list top or bottom by scrollbar position | `ScrollbarCompleteRecognition` |
 | Consumable pick (visited exclusion) | `ExpendableRecognition` |
+| Consumable pick by box (visited_boxes exclusion) | `ExpendableBoxRecognition` |
 | Gate subsequent nodes by day of week | `ScheduleRecognition` |
 | Alt + Click at specified position | `AutoAltClickAction` |
 | Ctrl + Click at specified position | `AutoCtrlClickAction` |

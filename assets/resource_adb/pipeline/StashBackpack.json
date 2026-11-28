@@ -22,7 +22,10 @@
         "action": "TouchDown",
         "contact": 4,
         "auto_up": true,
-        "post_delay": 1000
+        "post_delay": 1000,
+        "next": [
+            "StashBackpackUsableItemsLimitedQuickMoveClick"
+        ]
     },
     "StashBackpackUsableItemsLimitedQuickMoveClick": {
         "desc": "ADB 触点 0 点击转移到仓库图标，直到图标消失",
@@ -52,7 +55,13 @@
         "contact": 4,
         "post_wait_freezes": {
             "time": 200,
-            "target": "StashBackpackUsableItemsLimitedDrag"
+            "target": "StashBackpackUsableItemsLimitedDrag",
+            "target_offset": [
+                -20,
+                -44,
+                34,
+                44
+            ]
         }
     }
 }
